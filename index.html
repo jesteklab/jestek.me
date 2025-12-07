@@ -49,17 +49,52 @@
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       pointer-events: none; z-index: -1;
       background: #020205;
+      overflow: hidden; /* Prevents shooting stars from creating scrollbars */
     }
     .star {
       position: absolute;
-      width: 2px; height: 2px;
-      background: white;
+      width: 3px; height: 3px;
+      border-radius: 50%;
       opacity: 0.8;
-      animation: twinkle var(--duration) infinite ease-in-out;
+      animation: blink var(--duration) infinite ease-in-out;
     }
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 4px white; }
+    @keyframes blink {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+    
+    /* Shooting stars */
+    .shooting-star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      opacity: 1;
+      animation: shoot var(--shoot-duration) linear infinite;
+      animation-delay: var(--shoot-delay);
+    }
+    .shooting-star::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--star-color));
+      transform: translateX(2px) translateY(1px);
+    }
+    @keyframes shoot {
+      0% {
+        transform: translate(0, 0);
+        opacity: 1;
+      }
+      70% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate(150vw, -150vh);
+        opacity: 0;
+      }
     }
 
     /* --- TYPOGRAPHY --- */
@@ -563,18 +598,57 @@
 
     // Generate Stars Script
     const starContainer = document.getElementById('starContainer');
-    const starCount = 100;
+    const starCount = 150;
+    const shootingStarCount = 8;
+    
+    // Color palette for stars
+    const colors = ['#4deeea', '#ff0055', '#b4ff00', '#f1c40f'];
 
+    // Generate static blinking stars
     for (let i = 0; i < starCount; i++) {
       const star = document.createElement('div');
       star.classList.add('star');
+      
       // Random position
       star.style.left = Math.random() * 100 + 'vw';
       star.style.top = Math.random() * 100 + 'vh';
-      // Random animation duration
-      const duration = Math.random() * 3 + 2; // 2 to 5 seconds
+      
+      // Random color from palette
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      star.style.background = color;
+      star.style.boxShadow = `0 0 ${Math.random() * 3 + 2}px ${color}`;
+      
+      // Random animation duration (slow blink)
+      const duration = Math.random() * 4 + 3; // 3 to 7 seconds
       star.style.setProperty('--duration', duration + 's');
+      
       starContainer.appendChild(star);
+    }
+    
+    // Generate shooting stars
+    for (let i = 0; i < shootingStarCount; i++) {
+      const shootingStar = document.createElement('div');
+      shootingStar.classList.add('shooting-star');
+      
+      // Start from bottom-left area (random positions in bottom-left quadrant)
+      const startX = Math.random() * 30; // 0-30vw
+      const startY = 70 + Math.random() * 30; // 70-100vh
+      shootingStar.style.left = startX + 'vw';
+      shootingStar.style.top = startY + 'vh';
+      
+      // Random color from palette
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      shootingStar.style.background = color;
+      shootingStar.style.boxShadow = `0 0 4px ${color}`;
+      shootingStar.style.setProperty('--star-color', color);
+      
+      // Random duration and delay
+      const shootDuration = Math.random() * 2 + 2; // 2-4 seconds
+      const shootDelay = Math.random() * 5; // 0-5 seconds delay
+      shootingStar.style.setProperty('--shoot-duration', shootDuration + 's');
+      shootingStar.style.setProperty('--shoot-delay', shootDelay + 's');
+      
+      starContainer.appendChild(shootingStar);
     }
   </script>
 </body>
