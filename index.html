@@ -1,428 +1,581 @@
 <!DOCTYPE html>
-<link rel="icon" type="image/png" href="favicon.png">
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>JesTek | RC Technology by Jeswin Best</title>
+  <title>JesTek | RC Technology</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+  
   <style>
-    :root{
-      --bg:#0b0c10;
-      --fg:#e6e6e6;
-      --muted:#b8b8b8;
-      --accent:#ff1e3c;   /* vivid red */
-      --accent2:#b30024;  /* deep red */
-      --card:#121318cc;   /* glass card */
-      --border:#ffffff1a;
-      --glow:#ff335555;
+    :root {
+      /* Palette extracted from video */
+      --bg-color: #020205;
+      --card-bg: #0a0a10;
+      --text-main: #e0e0e0;
+      
+      /* Neon Accents */
+      --cyan: #4deeea;
+      --pink: #ff0055;
+      --green: #b4ff00;
+      --yellow: #f1c40f;
+      
+      /* Borders & UI */
+      --border-thick: 2px solid var(--cyan);
+      --border-thin: 1px solid rgba(77, 238, 234, 0.3);
+      
+      /* Fonts */
+      --font-pixel: 'Press Start 2P', cursive; /* For big titles */
+      --font-retro: 'VT323', monospace;       /* For subheaders */
+      --font-tech: 'Space Mono', monospace;   /* For body text */
     }
 
     * { box-sizing: border-box; }
-    html,body { margin:0; padding:0; background: var(--bg); color: var(--fg); }
+    
     body {
-      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-tech);
       line-height: 1.6;
       overflow-x: hidden;
-      /* Red–black merging canvas */
-      background:
-        radial-gradient(1200px 800px at 15% 20%, rgba(255,30,60,0.20), transparent 65%),
-        radial-gradient(900px 600px at 85% 80%, rgba(179,0,36,0.18), transparent 65%),
-        linear-gradient(120deg, #06070a 0%, #0b0c10 50%, #12040a 100%);
     }
 
-    a { color: var(--fg); text-decoration: none; }
-    img { max-width: 100%; display:block; }
+    /* --- BACKGROUND ANIMATION (Starfield) --- */
+    .stars {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: -1;
+      background: #020205;
+    }
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: white;
+      opacity: 0.8;
+      animation: twinkle var(--duration) infinite ease-in-out;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 4px white; }
+    }
 
-    /* Header / Nav */
+    /* --- TYPOGRAPHY --- */
+    h1, h2, h3, h4 {
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    h1 {
+      font-family: var(--font-pixel);
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      line-height: 1.5;
+      color: #fff;
+      text-shadow: 4px 4px 0px var(--pink);
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-family: var(--font-pixel);
+      font-size: 1.2rem;
+      color: var(--cyan);
+      margin-bottom: 30px;
+      border-left: 5px solid var(--pink);
+      padding-left: 15px;
+    }
+
+    h3 {
+      font-family: var(--font-retro);
+      font-size: 1.8rem;
+      color: #fff;
+      margin: 0 0 10px 0;
+    }
+
+    a { text-decoration: none; color: inherit; transition: 0.2s; }
+    p { margin-bottom: 1.5rem; color: #b0b0b0; font-size: 0.95rem; }
+
+    /* --- NAVIGATION --- */
     .nav {
       position: sticky; top: 0; z-index: 1000;
-      backdrop-filter: blur(10px);
-      background: linear-gradient(90deg, rgba(15,15,18,0.85), rgba(10,10,12,0.6));
-      border-bottom: 1px solid var(--border);
+      background: rgba(2, 2, 5, 0.9);
+      border-bottom: 1px solid var(--cyan);
+      backdrop-filter: blur(5px);
+      padding: 15px 0;
     }
     .nav-inner {
-      max-width: 1200px; margin: 0 auto; padding: 14px 20px;
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      max-width: 1200px; margin: 0 auto; padding: 0 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 15px;
     }
-    .brand { display: flex; align-items: center; gap: 12px; }
-    .brand img.logo {
-      width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 0 8px var(--glow));
+    .brand {
+      font-family: var(--font-pixel);
+      font-size: 1rem;
+      color: #fff;
+      display: flex; align-items: center; gap: 10px;
     }
-    .brand .title {
-      font-family: "Orbitron", sans-serif;
-      font-weight: 700; letter-spacing: 0.6px; font-size: 1.2rem;
-    }
-    .title .accent { color: var(--accent); }
-
-    .nav-links { display: flex; gap: 18px; flex-wrap: wrap; }
+    .brand span { color: var(--pink); }
+    
+    .nav-links { display: flex; gap: 20px; flex-wrap: wrap; }
     .nav-links a {
-      padding: 8px 12px; border-radius: 8px; color: var(--muted);
-      border: 1px solid transparent; transition: 160ms ease;
+      font-family: var(--font-retro);
+      font-size: 1.2rem;
+      color: var(--cyan);
+      text-transform: uppercase;
+      position: relative;
     }
     .nav-links a:hover {
-      color: var(--fg);
-      border-color: var(--border);
-      background: linear-gradient(90deg, rgba(255,30,60,0.09), rgba(255,30,60,0.02));
+      color: var(--green);
+      text-shadow: 0 0 8px var(--green);
     }
+    .nav-links a::before {
+      content: '>';
+      opacity: 0; margin-right: 5px; color: var(--pink);
+      transition: opacity 0.2s;
+    }
+    .nav-links a:hover::before { opacity: 1; }
 
-    /* Hero */
+    /* --- HERO SECTION --- */
     .hero {
+      min-height: 80vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 20px;
+      text-align: left;
       position: relative;
-      min-height: 82vh;
-      display: grid; place-items: center; text-align: center;
-      padding: 80px 20px;
-      overflow: hidden;
-      color: var(--fg);
-      background:
-        linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.75)),
-        url("assets/bg-abstract.jpg") center/cover no-repeat fixed;
-      background-blend-mode: overlay;
     }
-    .hero::after{
-      content:""; position:absolute; inset:-2px;
-      background:
-        radial-gradient(600px 300px at 20% 10%, rgba(255,30,60,0.25), transparent 60%),
-        radial-gradient(600px 300px at 80% 90%, rgba(179,0,36,0.25), transparent 60%);
-      pointer-events:none; mix-blend-mode: screen;
+    .hero-container {
+      max-width: 1000px;
+      border: 1px dashed var(--cyan);
+      padding: 40px;
+      background: rgba(10, 10, 16, 0.6);
+      position: relative;
     }
-    .hero-inner { max-width: 1100px; z-index: 1; }
+    /* Decorative corners */
+    .hero-container::before {
+      content: ""; position: absolute; top: -2px; left: -2px; width: 20px; height: 20px;
+      border-top: 4px solid var(--green); border-left: 4px solid var(--green);
+    }
+    .hero-container::after {
+      content: ""; position: absolute; bottom: -2px; right: -2px; width: 20px; height: 20px;
+      border-bottom: 4px solid var(--green); border-right: 4px solid var(--green);
+    }
+
     .kicker {
-      display:inline-block; font-size: 0.9rem; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--muted); border: 1px solid var(--border); border-radius: 999px;
-      padding: 6px 12px; margin-bottom: 16px; background: rgba(0,0,0,0.25);
+      display: inline-block;
+      background: var(--pink);
+      color: #000;
+      font-family: var(--font-pixel);
+      font-size: 0.7rem;
+      padding: 5px 10px;
+      margin-bottom: 20px;
     }
-    h1 {
-      font-family: "Orbitron", sans-serif; font-weight: 800; font-size: clamp(2rem, 8vw, 3.5rem);
-      margin: 10px 0 14px;
-      text-shadow: 0 0 24px rgba(255,30,60,0.25);
-    }
+
     .sub {
-      max-width: 800px; margin: 0 auto 28px; color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 700px;
+      color: #ccc;
+      border-left: 2px solid var(--cyan);
+      padding-left: 20px;
+      margin: 20px 0 40px 0;
     }
-    .cta {
-      display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-    }
+
+    /* --- BUTTONS --- */
     .btn {
-      padding: 12px 18px; border-radius: 12px; border: 1px solid var(--border);
-      background: linear-gradient(90deg, rgba(255,30,60,0.18), rgba(255,30,60,0.06));
-      color: var(--fg); font-weight: 700; transition: transform 160ms ease, box-shadow 160ms ease;
-      box-shadow: 0 8px 18px -6px rgba(255,30,60,0.25);
+      display: inline-block;
+      font-family: var(--font-pixel);
+      font-size: 0.8rem;
+      padding: 15px 25px;
+      background: var(--cyan);
+      color: #000;
+      border: none;
+      box-shadow: 4px 4px 0px #fff;
+      cursor: pointer;
+      margin-right: 15px;
+      margin-bottom: 10px;
+      transition: transform 0.1s;
     }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -6px rgba(255,30,60,0.35); }
-
+    .btn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #fff;
+      background: var(--green);
+    }
     .btn-ghost {
-      background: rgba(0,0,0,0.35);
+      background: transparent;
+      border: 2px solid #fff;
+      color: #fff;
+      box-shadow: none;
+    }
+    .btn-ghost:hover {
+      background: #fff;
+      color: #000;
     }
 
-    /* Sections */
-    section.section {
-      position: relative;
-      padding: 80px 20px;
-    }
+    /* --- SECTIONS --- */
+    .section { padding: 80px 20px; position: relative; }
     .container { max-width: 1100px; margin: 0 auto; }
-    .section h2 {
-      font-family: "Orbitron", sans-serif; font-size: clamp(1.4rem, 4vw, 2rem);
-      margin: 0 0 12px; color: #fff;
-      text-shadow: 0 0 16px rgba(255,30,60,0.18);
-    }
-    .section p.lead { color: var(--muted); margin: 0 0 28px; }
-
+    
+    /* Grid System */
     .grid {
-      display: grid; gap: 18px;
-      grid-template-columns: repeat(12, 1fr);
-    }
-    .col-4 { grid-column: span 12; }
-    .col-6 { grid-column: span 12; }
-    .col-8 { grid-column: span 12; }
-    @media (min-width: 800px){
-      .col-4 { grid-column: span 4; }
-      .col-6 { grid-column: span 6; }
-      .col-8 { grid-column: span 8; }
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px;
-      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.02);
-    }
-    .card h3 {
-      margin: 6px 0 6px; font-size: 1.05rem; color: #fff;
-    }
-    .tag {
-      display:inline-block; font-size: 0.75rem; color: #fff; background: #1a1a1a;
-      border: 1px solid var(--border); padding: 4px 8px; border-radius: 999px; margin-bottom: 8px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
     }
 
-    /* Accent dividers */
+    /* --- CARDS (Retro UI Style) --- */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--cyan);
+      padding: 25px;
+      position: relative;
+      transition: 0.3s;
+    }
+    .card:hover {
+      border-color: var(--pink);
+      box-shadow: 0 0 15px rgba(255, 0, 85, 0.2);
+    }
+    
+    /* Card Header decoration */
+    .card-header-deco {
+      display: flex; justify-content: space-between; margin-bottom: 15px;
+      border-bottom: 1px dashed #333; padding-bottom: 10px;
+    }
+    .deco-dots { display: flex; gap: 4px; }
+    .dot { width: 8px; height: 8px; background: #333; }
+    .dot.active { background: var(--green); }
+    
+    .tag {
+      font-family: var(--font-pixel);
+      font-size: 0.6rem;
+      color: var(--bg-color);
+      background: var(--yellow);
+      padding: 4px 8px;
+    }
+
+    ul { list-style: none; padding: 0; }
+    li {
+      margin-bottom: 10px;
+      padding-left: 20px;
+      position: relative;
+    }
+    li::before {
+      content: ">";
+      position: absolute; left: 0; color: var(--pink);
+    }
+
+    /* --- SPECIFIC MODULES --- */
+    .stat-box {
+      border: 2px solid #333;
+      padding: 15px;
+      text-align: center;
+      background: #000;
+    }
+    .stat-num {
+      font-family: var(--font-pixel);
+      font-size: 1.5rem;
+      color: var(--green);
+      display: block; margin-bottom: 5px;
+    }
+    
     .divider {
       height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0.7; margin: 26px 0;
+      background: repeating-linear-gradient(90deg, var(--cyan) 0, var(--cyan) 10px, transparent 10px, transparent 20px);
+      margin: 40px 0;
+      opacity: 0.5;
     }
 
-    /* Footer */
+    /* --- FOOTER --- */
     footer {
-      padding: 40px 20px; border-top: 1px solid var(--border);
-      background: linear-gradient(0deg, rgba(255,30,60,0.06), transparent);
-      color: var(--muted);
+      border-top: 2px solid var(--cyan);
+      background: #000;
+      padding: 40px 20px;
+      margin-top: 60px;
+    }
+    .footer-content {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
+    }
+    .footer-logo {
+      font-family: var(--font-pixel);
+      color: #fff;
     }
 
-    /* Helper: subtle section backgrounds to keep “merging” feel */
-    .bg-merge-a {
-      background:
-        radial-gradient(800px 400px at 20% 10%, rgba(255,30,60,0.08), transparent 60%),
-        radial-gradient(700px 350px at 90% 80%, rgba(179,0,36,0.08), transparent 60%);
-    }
-    .bg-merge-b {
-      background:
-        radial-gradient(600px 300px at 10% 90%, rgba(255,30,60,0.07), transparent 60%),
-        radial-gradient(600px 300px at 80% 15%, rgba(179,0,36,0.07), transparent 60%);
+    /* Tiny subtle CRT scanline effect */
+    body::after {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 9999;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
     }
 
-    /* Logo banner */
-    .logo-banner {
-      display:flex; align-items:center; gap: 18px;
-      padding: 16px; border-radius: 14px; border: 1px solid var(--border);
-      background: linear-gradient(90deg, rgba(255,30,60,0.12), rgba(255,30,60,0.04));
-    }
-    .logo-banner img { width: 72px; height: 72px; object-fit: contain; }
-    .logo-banner strong { color: #fff; }
-
-    /* Tiny utility */
-    .muted { color: var(--muted); }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
+  <div class="stars" id="starContainer"></div>
+
   <div class="nav">
     <div class="nav-inner">
       <a class="brand" href="#top">
-        <link rel="icon" type="image/png" href="JesTek LOGO website.png">
-        <div class="title">JesTek • <span class="accent">RC Technology</span></div>
+        [ JES<span style="color:var(--cyan)">TEK</span> ]
       </a>
       <nav class="nav-links">
         <a href="#about">About</a>
-        <a href="#components">Components</a>
-        <a href="#fpv">FPV & Networking</a>
-        <a href="#projects">Projects</a>
+        <a href="#components">Specs</a>
+        <a href="#fpv">Network</a>
+        <a href="#projects">Logs</a>
         <a href="#join">Join</a>
       </nav>
     </div>
   </div>
 
-  <!-- HERO -->
   <header id="top" class="hero">
-    <div class="hero-inner">
-      <span class="kicker">By Jeswin Best</span>
-      <h1>Redline control. Blackbox precision.</h1>
+    <div class="hero-container">
+      <span class="kicker">SYSTEM READY // v2.026</span>
+      <h1>Redline Control.<br>Blackbox Precision.</h1>
+      
       <p class="sub">
-        RC tech that merges raw speed with signal discipline — from radios and ESCs to Wi‑Fi FPV and onboard compute.
-        Dive into builds, configs, and field‑tested tips powering JesTek experiments.
+        RC technology by Jeswin Best. Merging raw speed with signal discipline. 
+        From custom radios to Wi-Fi FPV and onboard compute.
       </p>
+      
       <div class="cta">
-        <a class="btn" href="#projects">Explore builds</a>
-        <a class="btn btn-ghost" href="https://discord.gg/8r9rMNsjyk" target="_blank" rel="noopener">Join Discord</a>
+        <a class="btn" href="#projects">INITIALIZE BUILDS</a>
+        <a class="btn btn-ghost" href="https://discord.gg/8r9rMNsjyk" target="_blank" rel="noopener">:: DISCORD UPLINK</a>
       </div>
     </div>
   </header>
 
-  <!-- ABOUT -->
-  <section id="about" class="section bg-merge-a">
+  <section id="about" class="section">
     <div class="container">
-      <div class="logo-banner">
-       
-        <div>
-          <strong>JesTek</strong><br/>
-          <span class="muted">RC ideas by Jeswin Best — signal paths, power trains, and control loops tuned for the real world.</span>
+      <h2>// 01. THE MISSION</h2>
+      
+      <div class="card" style="margin-bottom: 30px; border-color: var(--pink);">
+        <div class="card-header-deco">
+          <span class="tag">INFO</span>
+          <div class="deco-dots">
+            <div class="dot active"></div><div class="dot active"></div><div class="dot"></div>
+          </div>
         </div>
+        <h3>JesTek Protocols</h3>
+        <p>
+          Remote Control isn’t just sticks and speed. It’s the orchestration of radio links, 
+          motor drivers, power budgeting, and latency control. We make the systems merge—like 
+          black and red—into one responsive unit.
+        </p>
       </div>
 
-      <div class="divider"></div>
+      <div class="grid">
+        <div class="stat-box">
+          <span class="stat-num">TX/RX</span>
+          <small>LINK STABILITY</small>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">BLDC</span>
+          <small>DRIVE SYSTEMS</small>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">LIPO</span>
+          <small>POWER MGMT</small>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <p class="lead">
-        Remote Control isn’t just sticks and speed. It’s the orchestration of radio links, motor drivers, power budgeting,
-        sensing, and latency control. The craft is getting them to merge — like black and red — into one responsive system.
+  <section id="components" class="section">
+    <div class="container">
+      <h2>// 02. HARDWARE STACK</h2>
+      <p style="color: var(--cyan); font-family: var(--font-retro); font-size: 1.4rem;">
+        > LOADING COMPONENT CHECKLIST...
       </p>
 
       <div class="grid">
-        <div class="col-4">
-          <div class="card">
-            <span class="tag">Control Link</span>
-            <h3>Transmitters & Receivers</h3>
-            <p>2.4 GHz spread spectrum, sub-GHz long-range, telemetry uplinks, and failsafe tuning for predictable behavior.</p>
+        <div class="card">
+          <div class="card-header-deco">
+             <span class="tag" style="background: var(--cyan)">RADIO</span>
+             <div class="deco-dots"><div class="dot active"></div></div>
           </div>
+          <h3>Control Link</h3>
+          <ul>
+            <li>2.4GHz / 900MHz Protocols</li>
+            <li>Telemetry for V/RSSI</li>
+            <li>Interference Audits</li>
+          </ul>
         </div>
-        <div class="col-4">
-          <div class="card">
-            <span class="tag">Drive</span>
-            <h3>Motors & ESCs</h3>
-            <p>Brushed vs brushless, ESC timing, current limits, braking profiles, and thermal headroom for sustained pulls.</p>
+
+        <div class="card">
+           <div class="card-header-deco">
+             <span class="tag" style="background: var(--green); color:#000;">DRIVE</span>
+             <div class="deco-dots"><div class="dot active"></div></div>
           </div>
+          <h3>Motion Stack</h3>
+          <ul>
+            <li>BLDC Motor sizing</li>
+            <li>ESC Timing & Braking</li>
+            <li>Propeller Load Matching</li>
+          </ul>
         </div>
-        <div class="col-4">
-          <div class="card">
-            <span class="tag">Energy</span>
-            <h3>Power Systems</h3>
-            <p>LiPo/Li-ion packs, C-ratings, BEC isolation, ripple suppression, and connectors that don’t bottleneck amps.</p>
+
+        <div class="card">
+           <div class="card-header-deco">
+             <span class="tag" style="background: var(--pink)">LOGIC</span>
+             <div class="deco-dots"><div class="dot active"></div></div>
+          </div>
+          <h3>Compute & Sense</h3>
+          <ul>
+            <li>Onboard MCU / SBC</li>
+            <li>IMU/GNSS Integration</li>
+            <li>Failsafe Logic</li>
+          </ul>
+        </div>
+        
+         <div class="card">
+           <div class="card-header-deco">
+             <span class="tag" style="background: var(--yellow); color:#000;">ENERGY</span>
+             <div class="deco-dots"><div class="dot active"></div></div>
+          </div>
+          <h3>Power Integrity</h3>
+          <ul>
+            <li>LC Filtering for Noise</li>
+            <li>Current Sensing</li>
+            <li>High-Amp Harnessing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <div class="container"><div class="divider"></div></div>
+
+  <section id="fpv" class="section">
+    <div class="container">
+      <h2>// 03. VIDEO & NETWORKING</h2>
+      
+      <div class="grid" style="grid-template-columns: 2fr 1fr;">
+        <div class="card" style="grid-column: span 2;">
+          <h3>Wi-Fi FPV Tuning</h3>
+          <p>Optimizing the stream from analog VTX to digital RTSP.</p>
+          <div class="grid" style="margin-top:20px;">
+             <div style="border-left: 2px solid var(--pink); padding-left:15px;">
+               <strong style="color:#fff">5.8 GHz Band</strong><br>
+               Lock channel width to stabilize latency.
+             </div>
+             <div style="border-left: 2px solid var(--pink); padding-left:15px;">
+               <strong style="color:#fff">Bitrate Pinning</strong><br>
+               Prevent encoding oscillations on sender.
+             </div>
+             <div style="border-left: 2px solid var(--pink); padding-left:15px;">
+               <strong style="color:#fff">QoS Router</strong><br>
+               Prioritize video packets over chatter.
+             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- COMPONENTS -->
-  <section id="components" class="section bg-merge-b">
+  <section id="projects" class="section">
     <div class="container">
-      <h2>Core components checklist</h2>
-      <p class="lead">A practical bill of materials to get from bench to field without mystery failures.</p>
+      <h2>// 04. LAB EXPERIMENTS</h2>
+      <p class="lead">A rolling log of JesTek builds. From bench test to field failure.</p>
 
       <div class="grid">
-        <div class="col-6">
-          <div class="card">
-            <h3>Radio stack</h3>
-            <ul>
-              <li>TX/RX pair (protocol matched), antennas properly oriented</li>
-              <li>Telemetry channel for voltage/RSSI</li>
-              <li>Interference audit: Wi‑Fi, VTX, and ESC PWM noise</li>
-            </ul>
-          </div>
+        <div class="card">
+          <span class="tag">PROJECT_01</span>
+          <h3>Phone-Cam RTSP</h3>
+          <p>Turning a smartphone into a low-latency FPV camera with tuned bitrate, locked FPS, and a lightweight ground station.</p>
+          <a href="#" style="color:var(--cyan); font-size:0.8rem;">[ READ LOG ]</a>
         </div>
-        <div class="col-6">
-          <div class="card">
-            <h3>Motion stack</h3>
-            <ul>
-              <li>BLDC motors sized for thrust/weight targets</li>
-              <li>ESCs with current headroom and cooling</li>
-              <li>Gearing/prop selection aligned to mission profile</li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="card">
-            <h3>Compute & sensing</h3>
-            <ul>
-              <li>Onboard MCU or SBC (mission logic, mixing, logs)</li>
-              <li>IMU/GNSS where needed; vibration isolation</li>
-              <li>Failsafes: arming, loss-of-link, low-voltage landing</li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="card">
-            <h3>Power integrity</h3>
-            <ul>
-              <li>Separate noisy loads, add LC filters where needed</li>
-              <li>Calibrated voltage/current sensing</li>
-              <li>Harness: strain relief, heatshrink, right connectors</li>
-            </ul>
-          </div>
-        </div>
-      </div>
 
+        <div class="card">
+          <span class="tag">PROJECT_02</span>
+          <h3>Failsafe Drills</h3>
+          <p>Loss-of-link rehearsals. Configuring throttle curves to keep vehicles predictable when the radio goes silent.</p>
+          <a href="#" style="color:var(--cyan); font-size:0.8rem;">[ READ LOG ]</a>
+        </div>
+
+        <div class="card">
+          <span class="tag">PROJECT_03</span>
+          <h3>Thermal Limits</h3>
+          <p>Pushing ESCs past brochure numbers with temperature probes under sustained high-amp loads.</p>
+          <a href="#" style="color:var(--cyan); font-size:0.8rem;">[ READ LOG ]</a>
+        </div>
+        
+        <div class="card">
+          <span class="tag">PROJECT_04</span>
+          <h3>Router-on-Board</h3>
+          <p>Mounting compact routers as mobile APs for command + video. WDS testing and channel isolation.</p>
+          <a href="#" style="color:var(--cyan); font-size:0.8rem;">[ READ LOG ]</a>
+        </div>
+      
+ <div class="card">
+          <span class="tag">PROJECT_05</span>
+          <h3>RC boats</h3>
+          <p>ATmega, L293D, coreless motors, servos, HC-05, ESP32, WebSockets.</p>
+          <a href="#" style="color:var(--cyan); font-size:0.8rem;">[ READ LOG ]</a>
+        </div>
+
+ <div class="card">
+          <span class="tag">PROJECT_06</span>
+          <h3>RC planes</h3>
+          <p>ATmega, L293D, coreless motors, servos, HC-05, ESP32, WebSockets.</p>
+          <a href="#" style="color:var(--cyan); font-size:0.8rem;">[ READ LOG ]</a>
+        </div>
+
+ <div class="card">
+                    <h2>UPCOMING!</h2>
+         
+        </div>
+
+</div>
     </div>
   </section>
 
-  <!-- FPV & NETWORKING -->
-  <section id="fpv" class="section bg-merge-a">
-    <div class="container">
-      <h2>FPV and networking</h2>
-      <p class="lead">From analog VTX to Wi‑Fi/RTSP on phones and routers — tune for bitrate, buffer, and RF coexistence.</p>
-
-      <div class="grid">
-        <div class="col-8">
-          <div class="card">
-            <h3>Wi‑Fi FPV quick tips</h3>
-            <ul>
-              <li>Use 5 GHz for lower congestion; lock channel width to stabilize latency.</li>
-              <li>Pin bitrate/encoding on the sender to avoid oscillations.</li>
-              <li>Separate control link and video link bands to prevent desense.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="card">
-            <h3>Router tricks</h3>
-            <ul>
-              <li>Bridge modes for range; fixed IPs for low discovery time.</li>
-              <li>QoS to prioritize FPV stream over background chatter.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section id="projects" class="section bg-merge-b">
-    <div class="container">
-      <h2>Build logs and experiments</h2>
-      <p class="lead">A rolling log of JesTek experiments — from test stands to field runs.</p>
-
-      <div class="grid">
-        <div class="col-6">
-          <div class="card">
-            <span class="tag">FPV</span>
-            <h3>Phone‑cam RTSP FPV</h3>
-            <p>Turning a phone into a low-latency FPV camera with tuned bitrate, locked FPS, and a lean viewer on the ground.</p>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="card">
-            <span class="tag">Control</span>
-            <h3>Failsafe drills</h3>
-            <p>Loss‑of‑link rehearsals and throttle curves that keep vehicles predictable when things go weird.</p>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="card">
-            <span class="tag">Power</span>
-            <h3>Thermal headroom tests</h3>
-            <p>ESC temp probes under sustained load to find honest limits — not brochure numbers.</p>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="card">
-            <span class="tag">Integration</span>
-            <h3>Router‑on‑board link</h3>
-            <p>Compact router as a mobile AP for command + video; WDS tests and channel isolation mapping.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- JOIN / COMMUNITY -->
-  <section id="join" class="section bg-merge-a">
-    <div class="container">
-      <h2>Join the community</h2>
-      <p class="lead">Swap configs, troubleshoot, and share test clips.</p>
-
-      <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
-        <div>
-          <strong>Discord • JesTek Lab</strong><br/>
-          <span class="muted">Hop in and say hi — bring your build notes.</span>
-        </div>
-        <a class="btn" href="https://discord.gg/8r9rMNsjyk" target="_blank" rel="noopener">Join Jeswin’s Discord</a>
+  <section id="join" class="section">
+    <div class="container" style="text-align: center;">
+      <div class="card" style="border-color: var(--green);">
+        <h2 style="border:none; text-align:center; color: var(--green);">READY TO JOIN THE LAB?</h2>
+        <p>Swap configs, troubleshoot builds, and share blackbox logs.</p>
+        <br>
+        <a class="btn" style="background:var(--green); color:black;" href="https://discord.gg/8r9rMNsjyk" target="_blank" rel="noopener">CONNECT TO DISCORD</a>
       </div>
     </div>
   </section>
 
   <footer>
-    <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
-      <div>
-        © <span id="year"></span> JesTek • Built by Jeswin Best
+    <div class="container footer-content">
+      <div class="footer-logo">
+        © <span id="year">2026</span> JesTek
       </div>
-      <div class="muted">Red meets black. Signal meets control.</div>
+      <div style="font-family: var(--font-retro); color: #666;">
+        RED MEETS BLACK. SIGNAL MEETS CONTROL.
+      </div>
     </div>
   </footer>
 
   <script>
+    // Set Year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Generate Stars Script
+    const starContainer = document.getElementById('starContainer');
+    const starCount = 100;
+
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      // Random position
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * 100 + 'vh';
+      // Random animation duration
+      const duration = Math.random() * 3 + 2; // 2 to 5 seconds
+      star.style.setProperty('--duration', duration + 's');
+      starContainer.appendChild(star);
+    }
   </script>
 </body>
 </html>
